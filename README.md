@@ -1,58 +1,44 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 2: Civic data analyses
+﻿# Project : **Building "Pokemon Stay"**
+Project 1: Game programming and analysis for sg_dsi7 class in GA
 
-## Business Case
+[![The Pokemon Project on Python: Gotta Catch ‘Em All](https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/01/07/17/pokemon.jpg)](https://www.youtube.com/watch?v=rg6CiPI6h2g&feature=youtu.be)
+ 
+## Objective : What does the games do ?
 
-Your hometown mayor just created a new data analysis team to give policy advice, and the administration recruited _you_ via LinkedIn to join it. Unfortunately, due to budget constraints, for now the "team" is just you...
+Instead of moving around to catch the critters like what Pokemon Go did, a new game would made which instead involves visiting certain websites to catch the Pokemon. We were supposed to create the Pokedex, gym locations, player dictionary ,PokeDex dictionary and more for the game. 
 
-The mayor wants to start a new initiative to move the needle on one of two separate issues: high school education outcomes, or drug abuse in the community.
+Some data structures were created and to be used for analysis:
 
-Also unfortunately, that is the entirety of what you've been told. And the mayor just went on a lobbyist-funded fact-finding trip in the Bahamas. In the meantime, you got your hands on two national datasets: one on SAT scores by state, and one on drug use by age. Start exploring these to look for useful patterns and possible hypotheses!
+* pokemon_gyms - Collection of gym location websites using python list
+* players - A list of players using nested dictionary in python
+* pokedex - A list of pokemon (playing monsters) using nested dictionary in python
 
---- 
+What we do:
 
-## Directions
+    Load data file "pokedex_basic.csv" from repo
+    Load into memory and parse it thru some conversion and clean
+    Calling statistical module to work out the statistical properties.
 
-This project is focused on exploratory data analysis, aka "EDA". EDA is an essential part of the data science analysis pipeline. Failure to perform EDA before modeling is almost guaranteed to lead to bad models and faulty conclusions. What you do in this project are good practices for all projects going forward, especially those after this bootcamp!
+## What to install 
 
-Spend your time trying to understand your data, through both summary statistics and visualization. By the end, you will want to be familiar enough with the datasets that you can think of testable hypotheses that could point in specific policy directions.
+Installing `Anaconda`, `Python 3` and `Jupyter Notebook`, visit this example:
 
-We will be looking for the following things:
-
-- For statistics questions, Python code -- using pandas, numpy, scipy, and/or other libraries -- to calculate correct answers, with Markdown explaining your results
-- For plotting questions, labeled seaborn or matplotlib plots displayed within your notebook, with Markdown interpreting the results
-
----
-
-## Requirements
-
-- Materials must be in a clearly commented Jupyter notebook.
-- Students should demonstrate the ability to:
-
-    - Analyze diverse datasets & explicitly state your assumptions.
-    - Form hypotheses and justify them with solid statistical testing in NumPy. 
-    - Visualize and interpret your plots using Matplotlib and Seaborn. 
-
----
-
-### Useful Resources
-
-- Here's a [cheatsheet](https://chrisalbon.com/python/pandas_dataframe_descriptive_stats.html) of descriptive statistics methods in Pandas.
-
-- Making good plots can take a lot of trial-and-error (especially with matplotlib). The [seaborn example gallery](http://seaborn.pydata.org/examples/) may help you find the right code, and decide what you want to do in the first place.
-
-- Inferential statistics and hypothesis testing can get very nuanced. It is okay to violate some of the assumptions underlying the methods you've learned. But be explicit about why you've chosen a particular method, and what the drawbacks may be.
-
----
-
-### Project Feedback + Evaluation
-
-For all projects, students will be evaluated on a simple 3 point scale (0, 1, or 2). Instructors will use this rubric when scoring student performance on each of the core project **requirements:** 
-
- Score | Expectations
- ----- | ------------
- **0** | _Does not meet expectations. Try again._
- **1** | _Meets expectations. Good job._
- **2** | _Surpasses expectations. Brilliant!_
+    https://medium.com/@neuralnets/beginners-quick-guide-for-handling-issues-launching-jupyter-notebook-for-python-using-anaconda-8be3d57a209b
 
 
-[For more information on how we grade our DSI projects, see our project grading walkthrough.](https://git.generalassemb.ly/dsi-projects/readme/blob/master/README.md)
+### Learning Jupyter
+
+To install and learm more on Jupyter Notebook, read this example:
+
+    https://www.dataquest.io/blog/jupyter-notebook-tutorial/
+
+## Basic statistics in Python
+
+About descriptive statistics in Python:
+
+    https://www.dataquest.io/blog/basic-statistics-with-python-descriptive-statistics
+
+
+## Reference
+Interesting dataset [Top 100 All Pokémon](https://www.serebii.net/pokedex-dp/stat/all.shtml) for Pokemon data.
+Advanced search for PokeDex [Pokémon Search](https://www.pokemon.com/us/pokedex/) for understand PokeMon.
