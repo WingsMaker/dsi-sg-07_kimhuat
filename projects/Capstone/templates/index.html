@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Telegram: Contact @theia_bot</title>
+<style type="text/css">
+.tgme_head_wrap
+{
+ height:100px;
+ background-color:#4FBEFF;
+}
+.mydiv:hover
+{
+ background-color:black;
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<meta property="og:title" content="bi_bot">
+<meta property="og:image" content="bi_bot.png">
+<meta property="og:site_name" content="Telegram">
+<meta property="og:description" content="https://sites.google.com/view/bi-bot/home">
+
+<meta property="twitter:title" content="bi_bot">
+<meta property="twitter:image" content="bi_bot.png">
+<meta property="twitter:site" content="@Telegram">
+
+<meta property="al:ios:app_store_id" content="686449807">
+<meta property="al:ios:app_name" content="Telegram Messenger">
+<meta property="al:ios:url" content="tg://resolve?domain=theia_bot">
+
+<meta property="al:android:url" content="tg://resolve?domain=theia_bot">
+<meta property="al:android:app_name" content="Telegram">
+<meta property="al:android:package" content="org.telegram.messenger">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@Telegram">
+<meta name="twitter:description" content="https://sites.google.com/view/bi-bot/home
+">
+<meta name="twitter:app:name:iphone" content="Telegram Messenger">
+<meta name="twitter:app:id:iphone" content="686449807">
+<meta name="twitter:app:url:iphone" content="tg://resolve?domain=theia_bot">
+<meta name="twitter:app:name:ipad" content="Telegram Messenger">
+<meta name="twitter:app:id:ipad" content="686449807">
+<meta name="twitter:app:url:ipad" content="tg://resolve?domain=theia_bot">
+<meta name="twitter:app:name:googleplay" content="Telegram">
+<meta name="twitter:app:id:googleplay" content="org.telegram.messenger">
+<meta name="twitter:app:url:googleplay" content="https://t.me/theia_bot">
+
+<meta name="apple-itunes-app" content="app-id=686449807, app-argument: tg://resolve?domain=theia_bot">
+    <link rel="shortcut icon" href="https://telegram.org/favicon.ico?3" type="image/x-icon">
+    <link href="css" rel="stylesheet" type="text/css">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="telegram.css" rel="stylesheet" media="screen">  </head>
+  <body>
+
+<body bgcolor="cyan">
+<h1>General Assembly, DSI 7 presents</h1>
+<p>Service <strong>BI_BOT</strong> using machine learning algorithm by Kim Huat</p>
+<div class="tgme_page_wrap">
+<h1 class="tgme_head_wrap" style="text-align: center;"><a href="tg://resolve?domain=theia_bot"><img class="tgme_page_photo_image" style="float: left;" src="https://www.pythonanywhere.com/user/bibot/files/home/bibot/bi_bot.png" width="150" height="150" /></a>BI Chatbot</h1>
+&nbsp;&nbsp;This is Machine Learning Chatbot app for BI users, click :<a class="tgme_action_button_new" href="tg://resolve?domain=theia_bot">Send Message</a><br />
+<div class="tgme_page_wrap">
+<div class="tgme_page">&nbsp;</div>
+<div class="tgme_page">
+<div class="tgme_page_photo">&nbsp;</div>
+<div class="tgme_page_title">&nbsp;</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<div class="container">
+<h2>Flight Arrival On-Time Prediction by Probability</h2>
+<p>List of airport codes to use : 'SEA', 'MSP', 'DTW', 'ATL', 'JFK'</p><br>
+<form role="form" action="" method="post">{{ form.csrf }}
+<div class="form-group"><label for="depart">Departure:&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </label>&nbsp;<input id="depart" class="form-control" name="depart" type="text" value="JFK" placeholder="JFK" /></div>
+<div class="form-group"><br /><label for="arrival">Arrival:</label>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<input id="arrival" class="form-control" name="arrival" type="text" value="ATL" placeholder="ATL" /></div>
+<div class="form-group">&nbsp;</div>
+<label for="schedule">Departure schedule:</label> <input id="schedule" max="2020-12-31T00:00" min="2010-01-01T00:00" name="schedule" type="datetime-local" value="2019-05-30T19:30" />
+<div class="form-group">&nbsp;</div>
+<button class="btn predict" type="submit">Predict</button></form></div>
+<div class="container"><br />
+<div class="tgme_page_wrap">
+<div class="tgme_page">
+<div class="tgme_page_extra">&nbsp;</div>
+<!-- WEBOGRAM_BTN --></div>
+</div>
+<div id="tgme_frame_cont">&nbsp;</div>
+<br /> <br /> {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for message in messages %} {% if "Error" not in message[1]: %}
+<div class="alert alert-info"><strong>Result : </strong> {{ message[1] }}</div>
+{% endif %} {% if "Error" in message[1]: %}
+<div class="alert alert-warning">{{ message[1] }}</div>
+{% endif %} {% endfor %} {% endif %} {% endwith %}</div>
+<p><br /> </p>
+
+<!--
+<blockquote class="embedly-card">
+<h4><a href="https://sites.google.com/view/bi-bot/home">CapstoneProject</a></h4>
+<p>To assist BI users in a interactive manner instead of memorizing the business data structures before getting analysis done.<br />Self help environment for BI users analyzing the information.</p>
+</blockquote>
+
+<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+-->
+</body></html>
