@@ -274,7 +274,10 @@ def handle_selection(selection):
             msg = f'you have selected datasource from option {opt}'
             msgout(msg)
             dw_index = opt
-            ConnectDataWarehouse()
+            if ConnectDataWarehouse():
+                msg = datawarehouse['Explain'][dw_index]
+            else:
+                msg = 'Remote database is not available, please try later'
             msg = datawarehouse['Explain'][dw_index]    
             msgout(msg)
     elif select_mode == 2:
@@ -497,10 +500,16 @@ def ConnectDataWarehouse():
             print('connecting to remote database via SQL engine')        
             try:
                 dbengine = create_engine(datasource)
-                return 
+                try:
+                    bwdata = pd.read_sql('select * from products', con = dbengine)
+                    print('connected to remote database')                    
+                except:
+                    print('unable to connect remote database')
+                    return False
             except:
                 dbengine = None
                 print('unable to connect remote database')
+                return False
     elif datasource.find('http:') >=0 :
         print('mounting remote datafile as dataframe')
         dbengine.dispose()
@@ -514,7 +523,7 @@ def ConnectDataWarehouse():
         bwdata = pd.DataFrame
         bwdata.name = dsname
         bwdata = pd.read_csv(datasource)         
-    return 
+    return True
 
 def plotgraph(opt, fname = ''):
     global bwdata, dw_index
@@ -946,7 +955,11 @@ bot_id = status.get('id')
 bot_url = 'https://telegram.me/' + bi_bot_info['botuser']
 
 dw_index = 1
-ConnectDataWarehouse()
+if ConnectDataWarehouse():
+    msg = datawarehouse['Explain'][dw_index]
+else:
+    msg = 'Remote database is not available, please try later'
+msgout(msg)
 select_mode = 0
 chat_id = 0
 load_nlp = False
