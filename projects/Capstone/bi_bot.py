@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# ____ ___   ____        _
+# ____ ___   ____      
 #| __ )_ _| | __ )  ___ | |_
 #|  _ \| |  |  _ \ / _ \| __|
 #| |_) | |  | |_) | (_) | |_
@@ -37,6 +37,7 @@ from datetime import datetime
 import os, sys, string, random, time
 import json, webbrowser
 from sqlalchemy import create_engine
+import sqlite3
 
 # telegram api
 import asyncio
@@ -249,7 +250,7 @@ def get_response(user_response):
     req_tfidf = flat[-2]
     if(req_tfidf==0):
         if(user_response[:6] == 'who is' or user_response[:7] == 'what is' or user_response[:7] == 'tell me'):
-            question =user_response[5:] 
+            question = user_response[5:] 
             robo_response = whoIs(question)
             return robo_response            
         #robo_response = robo_response + "I am sorry! I don't understand you"
@@ -269,6 +270,7 @@ def handle_selection(selection):
         opt = int(valstr)
     if opt == 0:
         return
+    dsname = datawarehouse['Name'][dw_index]
     if select_mode == 1:
         if (opt > 0) and (opt <= len(datawarehouse)):
             msg = f'you have selected datasource from option {opt}'
@@ -281,12 +283,20 @@ def handle_selection(selection):
             msgout(msg)
     elif select_mode == 2:
         if (opt > 0) and (opt <= len(tables['Name'])):
+            if tables['Name'][opt] != dsname:
+                msg = "Sorry, this is not for another database"
+                msgout(msg)
+                return
             msg = f'you have selected option {opt}'
             msgout(msg)
             msg = run_query(opt)
             msgout(msg)
     elif select_mode == 3:
         if (opt > 0) and (opt <= len(queries['Name'])):
+            if queries['Name'][opt] != dsname:
+                msg = "Sorry, this is not for another database"
+                msgout(msg)
+                return
             msg = f'you have selected option {opt}'
             msgout(msg)
             msg = run_query(opt)
@@ -296,6 +306,10 @@ def handle_selection(selection):
                 SendPic(fn)
     elif select_mode == 4:
         if (opt > 0) and (opt <= len(reports['Name'])):
+            if reports['Name'][opt] != dsname:
+                msg = "Sorry, this is not for another database"
+                msgout(msg)
+                return
             msg = f'you have selected option {opt}'
             msgout(msg)
             pred_ana = reports['Report'][opt]       
@@ -436,12 +450,13 @@ def run_query(id):
         if select_mode == 2:
             query = tables['SQL'][id]
             if query != query:  # nan
-                query = 'Select * From ' + tables['Table'][id] + ' LIMIT 10'
+                query = 'Select * From [' + tables['Table'][id] + '] LIMIT 10'
         elif select_mode == 3:
             query = queries['SQL'][id]
         else:
             query = ''
         if query != '':
+            print(query)
             bwdata = pd.read_sql(query, con = dbengine)
         if select_mode == 2:
             df_text = tables['Table'][id] + '\n\n'
@@ -496,19 +511,22 @@ def ConnectDataWarehouse():
     print('Current datasource is : ', dsname)
     if datasource.find('postgresql:') >=0 :
         if dbengine == None:
-            print('connecting to remote database via SQL engine')        
+            print('connecting to remote database: ',datasource)
             try:
                 dbengine = create_engine(datasource)
-                try:
-                    bwdata = pd.read_sql('select * from products', con = dbengine)
-                    print('connected to remote database')                    
-                except:
-                    print('unable to connect remote database')
-                    return False
+                return True
             except:
-                dbengine = None
-                print('unable to connect remote database')
+                print('unable to connect to remote database')
                 return False
+            return True
+    elif datasource.find('.sqlite') >=0 :
+        print('connecting to local database: ', datasource)
+        try:
+            dbengine = sqlite3.connect(datasource)
+        except:
+            print('unable to connect to local database')
+            return False
+        return True        
     elif datasource.find('http:') >=0 :
         print('mounting remote datafile as dataframe')
         dbengine.dispose()
@@ -588,87 +606,13 @@ def start_msg():
     return msg
 
 def AnovaTest():
-    global dbengine, dw_index, bwdata, reports
-
-    if dw_index != 1:
-        return
-    id = 1
-    report = reports['Intro'][id]
-    fname = 'bi_chart.png'
-    qry = """
-    select c."Region" , d."OrderID" , d."Quantity" , d."UnitPrice" , d."Discount"
-    from Customers as c inner join orders as o on c."CustomerID" = o."CustomerID"
-    inner join order_details as d on d."OrderID" =  o."OrderID"
-    where c."Region" is not NULL
-    """
-
-    # loading the order details with customer region categories
-    df = pd.read_sql(qry, con = dbengine)
-
-    # Calculating the revenue per sub-order
-    df['price_per_order'] = df.Quantity * df.UnitPrice * (1 - df.Discount)
-
-    # Dropping the columns for quantity, unit price and discount now that we have the total revenue
-    df.drop(['Quantity', 'UnitPrice', 'Discount'], axis=1, inplace=True)
-
-    # Grouping the data by order and summing the revenue for each order
-    bwdata = df.groupby(['Region', 'OrderID'])['price_per_order'].sum().reset_index()
-
-    # Plotting the distributions for the data
-    plt.figure(figsize=(8,5))
-    for region in set(df.Region):
-        region_group = df.loc[df['Region'] == region]
-        sns.distplot(region_group['price_per_order'], hist_kws=dict(alpha=0.2), label=region)
-    plt.legend()
-    plt.xlabel('Price per order')    
-    plt.savefig(fname, dpi=100)
-    print(f'graph saved as {fname}')
-    plt.draw()
-    plt.show()    
-    
-    # Fitting a model of price_per_order on Region categories, 
-    # and using statsmodels to compute an ANOVA table
+    global TelegramBot, chat_id
+    msgout('Hypothesis Testing using ANOVA')
     try:
-        f = open('pricing_model.pkl', 'rb')
-        pricing_model = pickle.load(f)
-        f.close()    
+        status = TelegramBot.sendDocument(chat_id=chat_id, document=open('Anova.html', 'rb'))
+        print(status)        
     except:
-        print('unable to load from pricing model from pickle')
-        #pricing_model = ols('price_per_order ~ C(Region)', bwdata).fit()
-        return 'Missing file pricing_model.pkl'
-
-    pricing_aov_table = sm.stats.anova_lm(pricing_model, typ=2)
-    
-    print('\nAnova table:')
-    print(pricing_aov_table)
-    
-    report = report + 'Anova Table:\n'
-    list_cols = ['sum_sq', 'df', 'mean_sq', 'F', 'PR(>F)']
-    report = report + '\t'.join(list_cols) + '\n'
-    for i in pricing_aov_table.index:
-        report = report + i + ':'
-        row = list(pricing_aov_table.loc[i])
-        report = report + str(row) + '\n'
-    
-    result = pricing_model.summary2()
-    print('\nStats Model Summary:')
-    print(result)    
-    report = report + str(result) + '\n\n'
-    
-    print('\n\nConclusion (Hypothesis Test Result):\n')
-    report = report + '\n\nHypothesis Test Result:\n'
-    if pricing_aov_table.iloc[0,3] <0.05:
-        print('We can reject null hypothesis')
-        report = report + '\n\nWe can reject null hypothesis\n'        
-        report = report + '\n\nThe average amount spent per order between regions is the different\n'
-    else:
-        print('We cannot reject null hypothesis')
-        report = report + '\n\nWe cannot reject null hypothesis\n'
-        report = report + '\n\nThe average amount spent per order between regions is the same\n'
-
-    msgout(report)
-    SendPic(fname)
-    return 
+        return
 
 def GPA_Test():    
     global dw_index, bwdata, reports
@@ -773,7 +717,7 @@ def Product_Continuity():
     report = reports['Intro'][id]
     qry = """
     Select "Discontinued","UnitPrice","UnitsInStock","UnitsOnOrder","ReorderLevel"
-    from Products
+    from Product
     """
     bwdata = pd.read_sql(qry, con = dbengine)
     try:
@@ -851,7 +795,7 @@ def predit_discont(x_unitprice=20, x_stock=30, x_unitsonorder=0, x_reclevel=0):
     
     qry = """
     Select "Discontinued","UnitPrice","UnitsInStock","UnitsOnOrder","ReorderLevel"
-    from Products
+    from Product
     """
     bwdata = pd.read_sql(qry, con = dbengine)    
     
@@ -943,6 +887,10 @@ def input_raw():
     f = open('chatbot.txt','r',errors = 'ignore')
     return f.read().lower()
 
+
+#======================================================================
+# Main Program
+#======================================================================
 # starting up telegram bot with connection
 bi_bot_info = bot_getconfig('bi_bot.json')
 bot_token = bi_bot_info['token']
@@ -958,7 +906,7 @@ if ConnectDataWarehouse():
     msg = datawarehouse['Explain'][dw_index]
 else:
     msg = 'Remote database is not available, please try later'
-msgout(msg)
+msgout(msg)    
 select_mode = 0
 chat_id = 0
 load_nlp = False
@@ -966,9 +914,10 @@ if load_nlp:
     nltk.download() # for downloading packages
 raw = input_raw()
 sent_tokens = nltk.sent_tokenize(raw)# converts to list of sentences 
-#word_tokens = nltk.word_tokenize(raw)# converts to list of words
+word_tokens = nltk.word_tokenize(raw)# converts to list of words
 
-clear_output()
+
+clear_output() 
 clear_chat(bot_token)
 runbot = 1
 print ('bi_bot is listening ...')
